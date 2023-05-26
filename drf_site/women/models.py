@@ -10,7 +10,7 @@ class Women(models.Model):
     time_update = models.DateField(auto_now=True)
     is_published = models.BooleanField(default=True)
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True)
-    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)# добавляем ограничение доступа
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)# добавляем ограничение доступа  https://www.django-rest-framework.org/api-guide/permissions/
 
     def __str__(self):
         return self.title

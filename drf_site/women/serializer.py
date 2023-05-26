@@ -2,9 +2,10 @@ from rest_framework import serializers
 from .models import Women
 
 class WomenSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault()) # убираем поле выбора юзера при изменении данных
     class Meta:
         model = Women
-        fields = ('title','content','cat') # cat вместо cat_id и в запроса тоже нужно отправлять cat
+        fields = "__all__" # cat вместо cat_id и в запроса тоже нужно отправлять cat
 
 
 

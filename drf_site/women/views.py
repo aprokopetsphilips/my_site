@@ -1,17 +1,20 @@
 from django.forms import model_to_dict
 from django.shortcuts import render
 from rest_framework import generics, status, viewsets
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Women, Category
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializer import WomenSerializer
 
 
 # Create your views here.
 
-class WomenViewSet(viewsets.ModelViewSet):  # в юрл в виде словаря нужно указать методы и соответсвующие вызовы
+"""class WomenViewSet(viewsets.ModelViewSet):  # в юрл в виде словаря нужно указать методы и соответсвующие вызовы
     queryset = Women.objects.all()
     serializer_class = WomenSerializer  # https://www.django-rest-framework.org/api-guide/viewsets/
     # def get_queryset(self):
@@ -29,21 +32,27 @@ class WomenViewSet(viewsets.ModelViewSet):  # в юрл в виде словар
 
     def category(self, request):
         cats = Category.objects.all()
-        return Response({'cats': [c.name for c in cats]})
+        return Response({'cats': [c.name for c in cats]})"""
 
 
-"""stage 2 class WomenAPIList(generics.ListCreateAPIView):  # get и post запросы обрабатывает
+class WomenAPIList(generics.ListCreateAPIView):  # get и post запросы обрабатывает
     queryset = Women.objects.all()
     serializer_class = WomenSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,) # только чтение для авторизированых
 
-class WomenApiUpdate(generics.UpdateAPIView):
+class WomenApiUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = Women.objects.all()
     serializer_class = WomenSerializer
+    permission_classes = (IsAuthenticated,) # только чтение и редактирование для владельца записи
+    #authentication_classes = (TokenAuthentication,) # авторизация только по токенам
 
 
 class WomenApiDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Women.objects.all()
-    serializer_class = WomenSerializer"""
+    serializer_class = WomenSerializer
+    permission_classes = (IsAdminOrReadOnly,)  # собственный классюЧитают все а удаляет только админ
+
+
 
 """stage 1 class WomenApiView(APIView):
     def get(self, request):

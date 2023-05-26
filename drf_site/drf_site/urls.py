@@ -15,14 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from women.views import *
 from rest_framework import routers
 
-router = routers.SimpleRouter()
-router.register(r'women', WomenViewSet)  # https://www.django-rest-framework.org/api-guide/routers/
+#router = routers.SimpleRouter()
+#router.register(r'women', WomenViewSet)  # https://www.django-rest-framework.org/api-guide/routers/    and  https://www.django-rest-framework.org/api-guide/authentication/
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(router.urls)),
+    path('api/v1/drf-auth/', include('rest_framework.urls')), # https://djoser.readthedocs.io/en/latest/
+    path('api/v1/women/', WomenAPIList.as_view()),
+    path('api/v1/women/<int:pk>/', WomenApiUpdate.as_view() ),
+    path('api/v1/womendelete/<int:pk>/', WomenApiDetailView.as_view()),
+    path('api/v1/auth/', include('djoser.urls')), # эта и следующая строка для подключения djoser
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    #path('api/v1/', include(router.urls)),
+
 ]

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'women.apps.WomenConfig',
     'rest_framework',
+    'rest_framework.authtoken', # эта строчка позволяет использовать стандартную таблицу для авторизации по токенам
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +132,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_RENDER_CLASSES':[
         'rest_framework.renders.JSONRender',
-        'rest_framework.renders.BrowsableAPIRender',
+        'rest_framework.renders.BrowsableAPIRender', # эта настройка позволяет управлять данными после релиза и в данном случае настройка рендера не позволяет работать с кодом с браузера
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [ # разрешает аутентификацию по токенам и по сессиям
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
-} # эта настройка позволяет управлять данными после релиза и в данном случае настройка рендера не позволяет работать с кодом с браузера
+}
